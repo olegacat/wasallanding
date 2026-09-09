@@ -9,13 +9,12 @@ export async function subscribeLanding(input: {
     throw new Error("missing supabase env");
   }
 
-  const response = await fetch(`${SUPABASE_URL}/rest/v1/landing_subscriptions?on_conflict=email`, {
+  const response = await fetch(`${SUPABASE_URL}/rest/v1/rpc/subscribe_landing`, {
     method: "POST",
     headers: {
       apikey: SUPABASE_PUBLISHABLE_KEY,
       Authorization: `Bearer ${SUPABASE_PUBLISHABLE_KEY}`,
       "Content-Type": "application/json",
-      Prefer: "return=minimal,resolution=ignore-duplicates",
     },
     body: JSON.stringify({
       email: input.email.trim().toLowerCase(),
@@ -23,12 +22,7 @@ export async function subscribeLanding(input: {
     }),
   });
 
-  if (response.ok || response.status === 409) return;
-
-  const payload = (await response.json().catch(() => null)) as
-    | { code?: string }
-    | null;
-  if (payload?.code === "23505") return;
+  if (response.ok) return;
 
   throw new Error(`landing subscribe failed (${response.status})`);
 }

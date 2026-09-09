@@ -36,18 +36,34 @@ alter table public.landing_subscriptions enable row level security;
 revoke all on public.landing_subscriptions from public;
 revoke all on public.landing_subscriptions from anon;
 revoke all on public.landing_subscriptions from authenticated;
-grant insert (email, locale) on public.landing_subscriptions to anon;
 grant all on public.landing_subscriptions to service_role;
 
 drop policy if exists landing_subscriptions_anon_insert on public.landing_subscriptions;
-create policy landing_subscriptions_anon_insert
-  on public.landing_subscriptions
-  for insert
-  to anon
-  with check (
-    email ~* '^[^[:space:]@]+@[^[:space:]@]+\.[^[:space:]@]{2,}$'
-    and char_length(email) <= 254
-    and locale in ('en', 'ar')
-  );
+
+create or replace function public.subscribe_landing(email text, locale text default 'en')
+returns void
+language plpgsql
+security definer
+set search_path = pg_catalog, public
+as $$
+declare
+  e text := lower(btrim(coalesce(email, '')));
+  loc text := lower(btrim(coalesce(locale, 'en')));
+begin
+  if loc not in ('en', 'ar') then
+    loc := 'en';
+  end if;
+  if e !~ '^[^[:space:]@]+@[^[:space:]@]+\.[^[:space:]@]{2,}$' or char_length(e) > 254 then
+    raise exception 'invalid email' using errcode = '22023';
+  end if;
+
+  insert into public.landing_subscriptions (email, locale)
+  values (e, loc)
+  on conflict (email) do nothing;
+end;
+$$;
 
 revoke all on function public.landing_subscriptions_normalize() from public, anon, authenticated;
+revoke all on function public.subscribe_landing(text, text) from public;
+grant execute on function public.subscribe_landing(text, text) to anon;
+grant execute on function public.subscribe_landing(text, text) to authenticated;
