@@ -1,0 +1,337 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 20px);
+
+  --font-display: "Barlow Condensed", "Bagoss Condensed", "Oswald", sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-arabic: "Noto Kufi Arabic", "Tajawal", "Segoe UI", sans-serif;
+
+
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-plum: var(--plum);
+  --color-teal: var(--teal);
+  --color-cobalt: var(--cobalt);
+  --color-blush: var(--blush);
+  --color-olive: var(--olive);
+  --color-cream: var(--cream);
+  --color-ink: var(--ink);
+}
+
+:root {
+  --radius: 1rem;
+
+  /* Brand */
+  --plum: oklch(0.28 0.13 335);        /* #520345 */
+  --teal: oklch(0.71 0.13 170);        /* #05AF94 */
+  --cobalt: oklch(0.55 0.22 275);      /* #4D4AFD */
+  --blush: oklch(0.9 0.06 340);        /* #FFC1F9 */
+  --olive: oklch(0.62 0.15 115);       /* #7F8000 */
+  --cream: oklch(0.95 0.06 105);       /* #EFEEB6 */
+  --ink: oklch(0.15 0.02 300);
+
+  --background: var(--cream);
+  --foreground: var(--ink);
+  --card: oklch(0.98 0.02 100);
+  --card-foreground: var(--ink);
+  --popover: oklch(1 0 0);
+  --popover-foreground: var(--ink);
+  --primary: var(--plum);
+  --primary-foreground: var(--cream);
+  --secondary: var(--blush);
+  --secondary-foreground: var(--plum);
+  --muted: oklch(0.92 0.04 100);
+  --muted-foreground: oklch(0.4 0.02 300);
+  --accent: var(--olive);
+  --accent-foreground: var(--cream);
+  --destructive: oklch(0.6 0.22 25);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(0.85 0.04 100);
+  --input: oklch(0.9 0.03 100);
+  --ring: var(--plum);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3 {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+    font-weight: 600;
+    line-height: 0.95;
+    text-transform: none;
+  }
+
+}
+
+/* ---------- Motion ---------- */
+@keyframes wasal-float {
+  0%, 100% { transform: translateY(0) rotate(var(--tw-rotate, 0deg)); }
+  50% { transform: translateY(-10px) rotate(var(--tw-rotate, 0deg)); }
+}
+@keyframes wasal-float-alt {
+  0%, 100% { transform: translateY(0) rotate(var(--tw-rotate, 0deg)); }
+  50% { transform: translateY(-14px) rotate(var(--tw-rotate, 0deg)); }
+}
+@keyframes wasal-blob {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -20px) scale(1.05); }
+  66% { transform: translate(-20px, 20px) scale(0.98); }
+}
+@keyframes wasal-pulse-dot {
+  0%, 100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--color-teal) 60%, transparent); }
+  50% { box-shadow: 0 0 0 10px color-mix(in oklab, var(--color-teal) 0%, transparent); }
+}
+@keyframes wasal-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+@keyframes wasal-shine {
+  0% { transform: translateX(-120%) skewX(-20deg); }
+  100% { transform: translateX(220%) skewX(-20deg); }
+}
+@keyframes wasal-rise {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@utility reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 700ms cubic-bezier(0.22, 1, 0.36, 1), transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: opacity, transform;
+}
+@utility reveal-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+@utility animate-wasal-float {
+  animation: wasal-float 6s ease-in-out infinite;
+}
+@utility animate-wasal-float-alt {
+  animation: wasal-float-alt 7.5s ease-in-out infinite;
+}
+@utility animate-wasal-blob {
+  animation: wasal-blob 18s ease-in-out infinite;
+}
+@utility animate-wasal-pulse-dot {
+  animation: wasal-pulse-dot 2.4s ease-out infinite;
+}
+@utility animate-wasal-marquee {
+  animation: wasal-marquee 40s linear infinite;
+}
+@utility animate-wasal-rise {
+  animation: wasal-rise 700ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.btn-shine {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.btn-shine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.35) 50%, transparent 70%);
+  transform: translateX(-120%) skewX(-20deg);
+  pointer-events: none;
+}
+.btn-shine:hover::after {
+  animation: wasal-shine 900ms ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-wasal-float,
+  .animate-wasal-float-alt,
+  .animate-wasal-blob,
+  .animate-wasal-pulse-dot,
+  .animate-wasal-marquee,
+  .animate-wasal-rise { animation: none !important; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .btn-shine:hover::after { animation: none; }
+}
+
+
+@utility chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.375rem 0.875rem;
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  border: 1px solid var(--color-border);
+  background: var(--color-card);
+}
+
+@utility btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.5rem;
+  border-radius: 9999px;
+  background: var(--color-plum);
+  color: var(--color-cream);
+  font-weight: 600;
+  transition: transform 0.2s ease, background 0.2s ease;
+  &:hover {
+    background: color-mix(in oklab, var(--color-plum) 88%, black);
+    transform: translateY(-1px);
+  }
+}
+
+@utility btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.5rem;
+  border-radius: 9999px;
+  background: transparent;
+  color: var(--color-plum);
+  font-weight: 600;
+  border: 1px solid var(--color-plum);
+  transition: background 0.2s ease;
+  &:hover {
+    background: color-mix(in oklab, var(--color-plum) 8%, transparent);
+  }
+}
+
+@utility poster-tag {
+  display: inline-block;
+  background: var(--color-blush);
+  color: var(--color-plum);
+  padding: 0.02em 0.22em 0.14em;
+  border-radius: 4px;
+  box-shadow: 0 10px 24px -10px rgba(0, 0, 0, 0.35);
+  transform: rotate(-3deg);
+}
+
+@utility poster-tag-cream {
+  display: inline-block;
+  background: var(--color-cream);
+  color: var(--color-plum);
+  padding: 0.02em 0.22em 0.14em;
+  border-radius: 4px;
+  box-shadow: 0 10px 24px -10px rgba(0, 0, 0, 0.35);
+  transform: rotate(-3deg);
+}
+
+/* ---------- Sticker peel-in ---------- */
+@keyframes wasal-peel {
+  from { opacity: 0; transform: rotate(-14deg) scale(0.86) translateY(14px); }
+  to { opacity: 1; transform: rotate(0deg) scale(1) translateY(0); }
+}
+
+@utility sticker-peel {
+  opacity: 0;
+  transform: rotate(-14deg) scale(0.86) translateY(14px);
+  transform-origin: bottom left;
+  transition: opacity 700ms cubic-bezier(0.34, 1.56, 0.64, 1), transform 700ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+@utility sticker-peel-in {
+  opacity: 1;
+  transform: rotate(0deg) scale(1) translateY(0);
+}
+
+/* Olive = primary CTA in the brand colour system */
+@utility btn-olive {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.5rem;
+  border-radius: 9999px;
+  background: var(--color-olive);
+  color: var(--color-cream);
+  font-weight: 600;
+  transition: transform 0.2s ease, background 0.2s ease;
+  &:hover {
+    background: color-mix(in oklab, var(--color-olive) 86%, black);
+    transform: translateY(-1px);
+  }
+}
+
+/* Teal = feature pill */
+@utility pill-feature {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  background: color-mix(in oklab, var(--color-teal) 22%, var(--color-cream));
+  color: var(--plum);
+  border: 1px solid color-mix(in oklab, var(--color-teal) 45%, transparent);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sticker-peel { opacity: 1; transform: none; transition: none; }
+}
+
+/* Arabic slogan / wordmark typography — Kufi weight with no Latin letter-spacing,
+   which would break Arabic joins. Sized up slightly since Arabic x-height reads smaller. */
+@utility slogan-ar {
+  font-family: var(--font-arabic);
+  font-weight: 700;
+  letter-spacing: 0;
+  line-height: 1.5;
+  word-spacing: 0.08em;
+  font-feature-settings: "kern" 1;
+}
+
+@utility slogan-ar-lg {
+  font-family: var(--font-arabic);
+  font-weight: 800;
+  letter-spacing: 0;
+  line-height: 1.45;
+  word-spacing: 0.1em;
+}
