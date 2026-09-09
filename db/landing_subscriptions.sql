@@ -40,25 +40,26 @@ grant all on public.landing_subscriptions to service_role;
 
 drop policy if exists landing_subscriptions_anon_insert on public.landing_subscriptions;
 
-create or replace function public.subscribe_landing(email text, locale text default 'en')
+create or replace function public.subscribe_landing(_email text, _locale text default 'en')
 returns void
 language plpgsql
 security definer
 set search_path = pg_catalog, public
 as $$
 declare
-  e text := lower(btrim(coalesce(email, '')));
-  loc text := lower(btrim(coalesce(locale, 'en')));
+  normalized_email text := lower(btrim(coalesce(_email, '')));
+  normalized_locale text := lower(btrim(coalesce(_locale, 'en')));
 begin
-  if loc not in ('en', 'ar') then
-    loc := 'en';
+  if normalized_locale not in ('en', 'ar') then
+    normalized_locale := 'en';
   end if;
-  if e !~ '^[^[:space:]@]+@[^[:space:]@]+\.[^[:space:]@]{2,}$' or char_length(e) > 254 then
+  if normalized_email !~ '^[^[:space:]@]+@[^[:space:]@]+\.[^[:space:]@]{2,}$'
+     or char_length(normalized_email) > 254 then
     raise exception 'invalid email' using errcode = '22023';
   end if;
 
-  insert into public.landing_subscriptions (email, locale)
-  values (e, loc)
+  insert into public.landing_subscriptions as s (email, locale)
+  values (normalized_email, normalized_locale)
   on conflict (email) do nothing;
 end;
 $$;

@@ -17,8 +17,8 @@ export async function subscribeLanding(input: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      email: input.email.trim().toLowerCase(),
-      locale: input.locale,
+      _email: input.email.trim().toLowerCase(),
+      _locale: input.locale,
     }),
   });
 
