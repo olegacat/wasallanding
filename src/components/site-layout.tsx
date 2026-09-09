@@ -1,12 +1,11 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
-import wasalLogo from "@/assets/wasal-logo.svg.asset.json";
-import wasalLogoAr from "@/assets/wasal-logo-ar.svg.asset.json";
+import wasalLogo from "@/assets/logo.svg";
 import { DOC_INDEX_AR, DOC_INDEX_EN } from "@/lib/legal-content";
 import { useLanguage } from "@/lib/language";
 import { copyFor } from "@/lib/copy";
 
-/** The Wasal wordmark — Latin in English, Arabic (وصال) in Arabic. */
+/** The Wasal wordmark from `src/assets/logo.svg`. */
 export function WasalMark({
   className = "h-7 w-auto",
   invert = false,
@@ -16,33 +15,11 @@ export function WasalMark({
 }) {
   const { lang } = useLanguage();
 
-  if (lang === "ar") {
-    // Tint the Arabic mark with the surrounding text color via a CSS mask.
-    return (
-      <span
-        role="img"
-        aria-label="وصال"
-        className={`inline-block aspect-[709/389] ${className}`}
-        style={{
-          backgroundColor: "currentColor",
-          maskImage: `url(${wasalLogoAr.url})`,
-          WebkitMaskImage: `url(${wasalLogoAr.url})`,
-          maskRepeat: "no-repeat",
-          WebkitMaskRepeat: "no-repeat",
-          maskSize: "contain",
-          WebkitMaskSize: "contain",
-          maskPosition: "center",
-          WebkitMaskPosition: "center",
-        }}
-      />
-    );
-  }
-
   return (
     <img
-      src={wasalLogo.url}
-      alt="Wasal"
-      className={`${className} ${invert ? "invert brightness-0" : ""}`}
+      src={wasalLogo}
+      alt={lang === "ar" ? "وصال" : "Wasal"}
+      className={`${className} ${invert ? "[filter:brightness(0)_invert(1)]" : ""}`}
     />
   );
 }

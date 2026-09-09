@@ -98,11 +98,12 @@ function TrustCard({ title, desc, index }: { title: string; desc: string; index:
 
 import { SiteHeader, SiteFooter } from "@/components/site-layout";
 
-import wasalScreen from "@/assets/wasal-screen.svg.asset.json";
-import wasalFeed from "@/assets/wasal-feed.svg.asset.json";
+import wasalScreen from "@/assets/screenwassal1.jpg";
+import wasalFeed from "@/assets/screenwassal2.jpg";
 
 import { useLanguage } from "@/lib/language";
 import { copyFor } from "@/lib/copy";
+import { subscribeLanding } from "@/lib/landing-subscribe";
 
 // Icons + scroll targets only — labels come from the bilingual copy registry.
 const RIBBON_ITEMS = [
@@ -280,7 +281,7 @@ function FeedPhone() {
           {/* Full phone aspect, top-aligned so no content is cut mid-card */}
           <div className="relative overflow-hidden rounded-[46px] bg-black aspect-[9/19.5]">
             <img
-              src={wasalFeed.url}
+              src={wasalFeed}
               alt="Wasal app — neighborhood feed"
               className="block w-full h-full object-cover object-top select-none"
               draggable={false}
@@ -338,7 +339,7 @@ function HeroPhone() {
 
           <div className="relative overflow-hidden rounded-[46px] bg-black aspect-[9/19.5]">
             <img
-              src={wasalScreen.url}
+              src={wasalScreen}
               alt="Wasal app — Al Noor Mosque community feed"
               className="block w-full h-full object-cover object-top select-none"
               draggable={false}
@@ -594,14 +595,15 @@ function Landing() {
 }
 
 function EarlyAccessForm() {
-  const t = copyFor(useLanguage().lang);
+  const { lang } = useLanguage();
+  const t = copyFor(lang);
   const [email, setEmail] = useState("");
   const [honeypot, setHoneypot] = useState("");
   const [renderedAt] = useState(() => Date.now());
   const [error, setError] = useState<string | null>(null);
   const [status, setStatus] = useState<"idle" | "submitting" | "success">("idle");
 
-  const onSubmit = (e: FormEvent) => {
+  const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setError(null);
 
@@ -619,8 +621,13 @@ function EarlyAccessForm() {
     }
 
     setStatus("submitting");
-    // Simulate submission — wire to real endpoint later
-    window.setTimeout(() => setStatus("success"), 400);
+    try {
+      await subscribeLanding({ email: value, locale: lang });
+      setStatus("success");
+    } catch {
+      setStatus("idle");
+      setError(t.formFailed);
+    }
   };
 
   if (status === "success") {
